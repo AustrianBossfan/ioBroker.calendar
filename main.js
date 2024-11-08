@@ -625,6 +625,7 @@ class Calendar extends utils.Adapter {
     
             for(let i = 0; i <= ((calendar.days > 0) ? calendar.days : 7); i++) {
                 dayEvents[i] = [];
+                dayCount[i] = 0;
             }
             
             for(const i in events) {
@@ -648,7 +649,7 @@ class Calendar extends utils.Adapter {
                 this.addChannel(`${calendar.id}.${i}`, `Day ${i}`);
                 this.addState(`${calendar.id}.${i}.events`, 'Events', 'string', 'calendar.events', JSON.stringify(dayEvents[i]));
                 this.addState(`${calendar.id}.${i}.date`, 'Date', 'string', 'calendar.date', util.getDatetime(parseInt(i)).substring(0, 10));
-                this.addState(`${calendar.id}.${i}.eventsNumber`, 'Number of events', 'number', 'calendar.events', dayCount[i] ? dayCount[i] : '0');
+                this.addState(`${calendar.id}.${i}.eventsNumber`, 'Number of events', 'number', 'calendar.events', dayCount[i]);
             }
     
             this.getChannels((error, channels) => {
@@ -717,7 +718,7 @@ class Calendar extends utils.Adapter {
                 this.log.debug('State added => ' + result.id);
             }
 
-            this.setStateAsync(id, { val: (value || ''), ack: true });
+            this.setStateAsync(id, { val: (value), ack: true });
         } catch(error) {
             this.log.error(error);
         }
